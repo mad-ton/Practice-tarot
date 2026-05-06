@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRACTIKA TAROT</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a0f;color:#cfc4b2;font-family:'IM Fell English',Georgia,serif;min-height:100vh;padding:0 0 4rem;position:relative;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(200,98,42,0.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(201,168,76,0.05) 0%,transparent 50%);pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 1.2rem}
+header{text-align:center;padding:2.5rem 1rem 1.8rem;border-bottom:1px solid rgba(201,168,76,0.15);margin-bottom:2rem}
+h1{font-family:'Cinzel',serif;font-size:clamp(1.2rem,5vw,1.9rem);letter-spacing:0.18em;color:#c9a84c;text-shadow:0 0 30px rgba(201,168,76,0.2);margin-bottom:0.35rem}
+.sub{font-size:0.7rem;letter-spacing:0.22em;color:#8a96a8;opacity:0.7}
+.sigil{font-size:0.65rem;letter-spacing:0.12em;color:#7a6530;opacity:0.75;margin-top:0.3rem}
+.sec{font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.4em;color:#7a6530;text-transform:uppercase;margin-bottom:0.75rem;padding-bottom:0.35rem;border-bottom:1px solid rgba(201,168,76,0.1)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:0.5rem;margin-bottom:1.2rem}
+.sbtn{background:#16162a;border:1px solid rgba(201,168,76,0.15);color:#cfc4b2;padding:0.75rem 0.9rem;cursor:pointer;text-align:left;transition:all 0.2s;font-family:inherit;width:100%}
+.sbtn:hover{border-color:rgba(201,168,76,0.4);color:#c9a84c}
+.sbtn.active{border-color:#c9a84c;background:rgba(201,168,76,0.07);color:#c9a84c}
+.sg{font-size:1rem;display:block;color:#7a6530;margin-bottom:0.2rem}
+.sn{font-size:0.9rem;display:block;font-weight:600;margin-bottom:0.1rem}
+.sc{font-size:0.7rem;color:#7a6530;opacity:0.8}
+.desc{background:#13131f;border-left:2px solid #c8622a;border:1px solid rgba(201,168,76,0.1);border-left:2px solid #c8622a;padding:0.9rem 1.1rem;margin-bottom:1.2rem;font-size:0.95rem;color:#8a96a8;font-style:italic;line-height:1.7}
+textarea{width:100%;background:#16162a;border:1px solid rgba(201,168,76,0.2);color:#cfc4b2;padding:0.9rem;font-family:inherit;font-size:1rem;font-style:italic;resize:none;min-height:80px;outline:none;line-height:1.6;margin-bottom:1rem}
+textarea:focus{border-color:rgba(201,168,76,0.45)}
+.dbtn{display:block;width:100%;padding:1.1rem;background:transparent;border:1px solid #c9a84c;color:#c9a84c;font-family:'Cinzel',serif;font-size:0.9rem;letter-spacing:0.35em;cursor:pointer;margin-bottom:1.5rem;text-transform:uppercase;transition:all 0.3s}
+.dbtn:hover:not(:disabled){background:#c9a84c;color:#0a0a0f}
+.dbtn:disabled{opacity:0.35;cursor:not-allowed}
+.cards{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.5rem;justify-content:center}
+.chip{background:#1e1e2e;border:1px solid rgba(201,168,76,0.3);padding:0.5rem 0.9rem;font-size:0.82rem;color:#c9a84c}
+.chip.rev{border-color:rgba(200,98,42,0.4);color:#c8622a}
+.pl{font-size:0.65rem;display:block;opacity:0.65;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.15rem}
+/* YES/NO verdict */
+.verdict{text-align:center;padding:1.4rem;margin-bottom:1.2rem;border:1px solid rgba(201,168,76,0.2);background:#13131f}
+.verdict-word{font-family:'Cinzel',serif;font-size:2.4rem;letter-spacing:0.2em;margin-bottom:0.35rem}
+.verdict-word.yes{color:#5a9a5a}
+.verdict-word.no{color:#c8622a}
+.verdict-word.unclear{color:#c9a84c}
+.verdict-sub{font-size:0.9rem;color:#8a96a8;font-style:italic}
+/* READING */
+.rbox{background:#13131f;border:1px solid rgba(201,168,76,0.12);padding:1.6rem;line-height:1.9;font-size:1rem;color:#cfc4b2;display:none}
+.rbox.show{display:block}
+.rh{font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.35em;color:#c9a84c;text-transform:uppercase;margin-bottom:1.2rem;padding-bottom:0.5rem;border-bottom:1px solid rgba(201,168,76,0.12)}
+.csec{margin-bottom:1.6rem;padding-bottom:1.6rem;border-bottom:1px solid rgba(201,168,76,0.07)}
+.csec:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.ch4{font-family:'Cinzel',serif;font-size:0.88rem;color:#c9a84c;letter-spacing:0.08em;margin-bottom:0.6rem}
+.rev-tag{font-size:0.68rem;background:rgba(200,98,42,0.15);color:#c8622a;border:1px solid rgba(200,98,42,0.3);padding:0.15rem 0.4rem;margin-left:0.4rem;vertical-align:middle}
+.synth{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(201,168,76,0.15);font-style:italic;color:#c9a84c;font-size:1rem}
+/* COPY BUTTON */
+.copy-row{display:flex;justify-content:flex-end;margin-top:1.2rem}
+.cpybtn{background:transparent;border:1px solid rgba(201,168,76,0.3);color:#7a6530;font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.25em;padding:0.6rem 1.1rem;cursor:pointer;transition:all 0.25s;text-transform:uppercase}
+.cpybtn:hover{border-color:#c9a84c;color:#c9a84c}
+.cpybtn.copied{border-color:#5a9a5a;color:#5a9a5a}
+footer{text-align:center;margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(201,168,76,0.08);font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.25em;color:#7a6530;opacity:0.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>PRACTIKA TAROT</h1>
+  <div class="sub">PERSONAL ORACLE · TONY DEBRAND · 08.24.1984 · 11:41 AM · BOSTON</div>
+  <div class="sigil">♏ 6°44' · ☽ LEO 9TH · ☉ VIRGO 10TH · ♄♂ ASC · ♃♅♆ 2ND · ♇ 12TH · ☊ GEMINI 7TH · CHIRON ♊ 8TH</div>
+</header>
+
+<div class="sec">Select Your Spread</div>
+<div class="grid" id="sgrid"></div>
+<div class="desc" id="sdesc" style="display:none"></div>
+<div class="sec">Question or Intention</div>
+<textarea id="q" placeholder="Speak what you are holding. Or leave empty to let the field speak..." rows="3"></textarea>
+<button class="dbtn" id="dbtn" onclick="draw()" disabled>✦ &nbsp; Draw the Cards &nbsp; ✦</button>
+<div class="cards" id="cards"></div>
+<div id="verdict-area"></div>
+<div class="rbox" id="rbox">
+  <div class="rh">✦ &nbsp; The Reading &nbsp; ✦</div>
+  <div id="rtxt"></div>
+  <div class="copy-row">
+    <button class="cpybtn" id="cpybtn" onclick="copyReading()">⊕ &nbsp; Copy for Practika Chat</button>
+  </div>
+</div>
+<footer>PRACTIKA 2.0 · CHAOS MAGICK · FIELD-BASED PRACTICE · ALL OUTPUTS ARE TIER 3</footer>
+</div>
+
+<script>
+const SPREADS=[
+  {id:"yesno",name:"Yes / No Oracle",cards:1,g:"◎",desc:"A direct question gets a direct answer — but never just a word. The card gives the verdict plus the condition, the watch, or the reason. Ask a specific yes/no question.",pos:["The Answer"],yesno:true},
+  {id:"single",name:"Single Card",cards:1,g:"✦",desc:"One signal. Daily orientation or quick field check.",pos:["The Signal"]},
+  {id:"t_time",name:"Three Card · Time",cards:3,g:"◈",desc:"Past · Present · Future. What formed this moment, what is active now, what is moving toward you.",pos:["Past","Present","Future"]},
+  {id:"t_sit",name:"Three Card · Situation",cards:3,g:"◈",desc:"Situation · Action · Outcome.",pos:["Situation","Action","Outcome"]},
+  {id:"t_mbs",name:"Three Card · Mind·Body·Spirit",cards:3,g:"◈",desc:"What your instrument reads at each level. Core to Feeling Cognition practice.",pos:["Mind","Body","Spirit"]},
+  {id:"shadow",name:"Shadow Work",cards:5,g:"⬡",desc:"Pluto 12th and Chiron 8th. What is hidden · What it protects · Root wound · Gift within · Integration path. Use at new moon.",pos:["What Is Hidden","What It Protects","Root Wound","The Gift Within","Integration Path"]},
+  {id:"wealth",name:"Wealth Field",cards:5,g:"⬡",desc:"Current wealth field · What blocks · What supports · Field-required action · Frequency to embody.",pos:["Current Wealth Field","What Blocks Accumulation","What Supports Flow","Field-Required Action","Frequency to Embody"]},
+  {id:"celtic",name:"Celtic Cross",cards:10,g:"✙",desc:"The full ten-position cross. Deepest single-session read — do not use casually.",pos:["Present","Challenge","Foundation","Recent Past","Possible Future","Near Future","Self-Perception","Environment","Hopes & Fears","Final Outcome"]},
+  {id:"horse",name:"Horseshoe",cards:7,g:"⌇",desc:"Seven-card arc for practical decision points.",pos:["Past","Present","Hidden Influences","Obstacles","External Influences","Best Action","Most Likely Outcome"]},
+  {id:"rel",name:"Relationship",cards:6,g:"⟡",desc:"You · Partner · Dynamic · What is needed · Hidden thread · Growth edge. North Node 7th work.",pos:["Your Energy","Partner's Energy","The Dynamic","What Is Needed","Hidden Thread","Growth Edge"]},
+  {id:"lunar",name:"Lunar Cycle",cards:4,g:"☽",desc:"New Moon · Waxing · Full Moon · Waning. Use at new moon.",pos:["New Moon Intention","Waxing — Build","Full Moon — Witness","Waning — Release"]},
+  {id:"decision",name:"Decision Fork",cards:6,g:"⋈",desc:"Option A · Option B · What you know · What you don't · Field's preference · Cost of not choosing.",pos:["Option A","Option B","What You Know","What You Don't Know","Field's Preference","Cost of Not Choosing"]},
+  {id:"dream",name:"Dream Decode",cards:5,g:"⊛",desc:"Surface message · Pluto 12th layer · Chiron wound touched · Action required · Integration gesture.",pos:["Surface Message","Pluto 12th Layer","Chiron Wound Touched","Action Required","Integration Gesture"]},
+  {id:"will",name:"True Will Compass",cards:7,g:"⊕",desc:"True will direction · What obscures · Scorpio Rising container · Leo Moon fuel · North Node pull · Body knows · Next step only.",pos:["True Will Direction","What Obscures It","Scorpio Rising Container","Leo Moon Fuel","North Node Pull","What the Body Knows","Next Step Only"]},
+  {id:"hermit",name:"The Hermit's Return",cards:6,g:"⟁",desc:"Main Arcana IX. Discovered in solitude · Ready to return · Who receives · Obstacle · Gift · Light you carry.",pos:["Discovered in Solitude","Ready to Return","Who Can Receive It","Obstacle to Return","Gift of the Return","The Light You Carry"]},
+  {id:"year",name:"Year Ahead",cards:13,g:"⊞",desc:"Year theme + one card per month. Use at solar return.",pos:["Year Theme","January","February","March","April","May","June","July","August","September","October","November","December"]},
+];
+
+const MAJ=["The Fool","The Magician","The High Priestess","The Empress","The Emperor","The Hierophant","The Lovers","The Chariot","Strength","The Hermit","Wheel of Fortune","Justice","The Hanged Man","Death","Temperance","The Devil","The Tower","The Star","The Moon","The Sun","Judgement","The World"];
+const MIN=["Wands","Cups","Swords","Pentacles"].flatMap(s=>["Ace","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Page","Knight","Queen","King"].map(r=>`${r} of ${s}`));
+const DECK=[...MAJ,...MIN];
+
+// YES/NO card verdicts
+const YN={
+  "The Fool":{v:"yes",q:"but leap now — overthinking will kill the momentum"},
+  "The Magician":{v:"yes",q:"all the tools are present; the only question is whether you'll use them"},
+  "The High Priestess":{v:"unclear",q:"the answer is not yet fully visible; wait for the next field signal"},
+  "The Empress":{v:"yes",q:"abundance supports this; move from desire not scarcity"},
+  "The Emperor":{v:"yes",q:"but only if you're acting from genuine authority, not performance"},
+  "The Hierophant":{v:"unclear",q:"check whether you're following a rule that was never yours"},
+  "The Lovers":{v:"yes",q:"but it requires your full authentic self in the room, not the managed version"},
+  "The Chariot":{v:"yes",q:"momentum is available; commit to the direction completely"},
+  "Strength":{v:"yes",q:"the fire and the container are both present; trust that"},
+  "The Hermit":{v:"unclear",q:"more solitary integration is needed before moving; the answer will clarify"},
+  "Wheel of Fortune":{v:"yes",q:"the current has shifted in your favor; position to receive, not to force"},
+  "Justice":{v:"yes",q:"but only if the action is genuinely aligned; the field returns what is actually true"},
+  "The Hanged Man":{v:"no",q:"not yet — a different perspective is needed first; the pause is the instruction"},
+  "Death":{v:"yes",q:"but something must be released first; the yes comes through the ending"},
+  "Temperance":{v:"yes",q:"at the right pace and blend; forcing the timeline creates the obstacle"},
+  "The Devil":{v:"no",q:"something is running unconsciously here that will undermine the outcome; surface it first"},
+  "The Tower":{v:"no",q:"the structure you're asking about is already unstable; the field is redirecting you"},
+  "The Star":{v:"yes",q:"the field is clear and supportive; trust the direction"},
+  "The Moon":{v:"unclear",q:"you don't have full information yet; what Pluto 12th is holding will surface soon"},
+  "The Sun":{v:"yes",q:"clear and direct; the field is fully behind this"},
+  "Judgement":{v:"yes",q:"but it requires answering the call fully, not partially"},
+  "The World":{v:"yes",q:"this cycle supports completion; what you're asking about is already in motion"},
+};
+
+// Minor arcana yes/no by suit and rank
+function getMinorYN(rank,suit){
+  const suitV={Wands:"yes",Cups:"yes",Swords:"no",Pentacles:"yes"};
+  const rankMod={
+    "Ace":"the pure potential is here",
+    "Two":"a choice must be made first",
+    "Three":"early expansion supports this",
+    "Four":"but watch for settling too soon",
+    "Five":"disruption is present; read it as a road opener not a stop sign",
+    "Six":"flow and exchange support the outcome",
+    "Seven":"strategic patience required; don't move impulsively",
+    "Eight":"momentum is building; act when the opening appears",
+    "Nine":"nearly there; don't abandon at the final step",
+    "Ten":"completion energy; this cycle supports the outcome",
+    "Page":"new approach needed; the old method won't serve here",
+    "Knight":"move decisively but with direction, not just force",
+    "Queen":"operate from mature receptivity; the answer comes through presence not pushing",
+    "King":"full sovereignty available; claim the outcome from that place"
+  };
+  return {v:suitV[suit]||"unclear",q:rankMod[rank]||"the field is speaking through this card"};
+}
+
+// CARD INTERPRETATIONS
+const CARDS={
+  "The Fool":{u:"Pure potential before the analysis bridge engages. The Sacral yes before Saturn builds a risk assessment around it. The Sleeping Phoenix beginning another cycle.",r:"The leap delayed until conditions are perfect — the deployment problem in card form. Saturn/Mars 1st demanding proof of worthiness before action.",hook:"Follower trajectory: the current is here. Are you in it or still calculating the water temperature?"},
+  "The Magician":{u:"All instruments in hand and operational. Your Leo MC in full expression: the one who directs the field rather than reacts to it. Will + skill + right moment.",r:"The instrument is there but the signal is foggy. Neptune 2nd house blurring what you already possess. The 'yeah but' loop applied to your own power.",hook:"Your magic is field-based. The Magician upright says the field is clear and responsive. What are you not casting because you're waiting to feel more ready?"},
+  "The High Priestess":{u:"Pluto 12th speaking through the veil. What you know before you know you know it. Feeling Cognition receiving information your conscious mind hasn't named yet. Trust the body read.",r:"The instrument is online but you're overriding it with analysis. Mercury Rx Virgo in control mode — refining the intuition until it no longer resembles intuition.",hook:"She sits between the pillars. Scorpio Rising recognizes her — this is your perceptual depth at its most precise."},
+  "The Empress":{u:"Abundance as a natural state, not an earned reward. Lilith 5th in integration — creative and sensory pleasure as the frequency that clears Neptune 2nd fog. The field responds to embodied richness.",r:"Pleasure deferred until responsibility is discharged. The childhood pattern: fun window closes when duty calls. Scarcity frame around enjoyment.",hook:"Venus rules this card. Your Venus sits in Virgo 11th conjunct Selena — the gift of recognizing and cultivating abundance through precise attention to what already flourishes."},
+  "The Emperor":{u:"Saturn/Mars conjunct ASC operating correctly — structure in service of vision, not as a moral prerequisite. Authority that lands through stillness rather than requiring demonstration.",r:"Authority through force rather than presence. The effort-as-prerequisite shadow demanding visible proof before claiming the throne.",hook:"Your authority is ambient. The Emperor upright is not asking you to work harder. He's asking you to stop hedging."},
+  "The Hierophant":{u:"The established current — egregoric mass with centuries of belief behind it. Permission to work within tradition when tradition genuinely serves.",r:"Following inherited rules that no longer fit — including the effort-as-prerequisite belief installed by upbringing.",hook:"Chaos magick framework: the Hierophant reversed is the conscious choice to exit a current that isn't yours."},
+  "The Lovers":{u:"North Node 7th activation. The soul growth direction through genuine partnership and conscious choice. Not just romantic — any decision requiring your full authentic self.",r:"The choice deferred or made by default. South Node Sagittarius 1st comfort of self-reliance overriding the vulnerability genuine partnership requires.",hook:"This card governs Gemini — your North Node sign. When it appears, the field is pointing at your primary developmental arc this lifetime."},
+  "The Chariot":{u:"Mars/Saturn conjunct ASC at full operational capacity — controlled intensity moving with direction. The Manifesting Generator after responding: decisive, committed, unstoppable.",r:"Force without direction. The Mars energy without Saturn's structure, or Saturn's rigidity preventing Mars from moving at all.",hook:"The Chariot asks: have you actually chosen, or are you still in the preparation phase?"},
+  "Strength":{u:"Leo Moon's fire held and directed by Scorpio Rising's composure. The integration of raw instinct and strategic intelligence. Lilith 5th and the container working together.",r:"The fire is there but it's being suppressed rather than directed. Over-containment of Leo Moon to maintain Scorpio composure. The signal getting dimmed before full brightness.",hook:"This is your signature card energy — Escanor without apology. Solar pride with genuine tenderness underneath. Where are you currently turning this down?"},
+  "The Hermit":{u:"Your Main Arcana. The solitary work that produces the light others will eventually need. The 2nd line Hermit doing what it does best: processing in depth before returning with something worth offering.",r:"Solitude as avoidance rather than integration. South Node comfort of self-sufficiency used to postpone the North Node 7th return to partnership.",hook:"When The Hermit appears reversed: the time alone has served its purpose. The lantern is lit. Walk back down the mountain."},
+  "Wheel of Fortune":{u:"The Follower trajectory in motion — the current has shifted and you're in it. Sleeping Phoenix timing: a cycle completing and a new one opening. Jupiter 2nd expansion arriving through the field, not through effort.",r:"Resisting the turn of the wheel — holding a position the field is naturally moving past.",hook:"Uranus conjunct Jupiter in your 2nd house. When Wheel of Fortune appears, the expansive wealth current is active. Are you positioned to receive it?"},
+  "Justice":{u:"The field returning what is actually true. Mercury Rx Virgo precision applied to outcomes — accurate assessment, no inflation, no false modesty.",r:"Self-judgment running the Chiron wound program. The verdict issued before the case is fully heard.",hook:"Justice holds the scales. What you accurately assess and precisely serve returns to you in proportion."},
+  "The Hanged Man":{u:"Strategic suspension — not the deployment delay, but conscious pause for a different perspective. Pluto 12th processing what the waking mind can't yet see.",r:"Stuck rather than suspended. The paper-testing phase that has become comfortable stagnation.",hook:"The Hanged Man sees the world upside down and finds it clarifying. What would your situation look like if the problem you're solving is actually the solution?"},
+  "Death":{u:"The Sleeping Phoenix in full operation — something completing so something larger can emerge. The transformation composting in Pluto 12th is ready to surface. Release is the action required.",r:"Resistance to the ending that is already happening. The Phoenix trying to stay in the ash.",hook:"This card appearing in any Practika reading is confirmation: the disruption you're experiencing is a road opener you didn't cast yourself."},
+  "Temperance":{u:"The alchemical blend — not either/or but both integrated. The pleasure/stability split healing as Leo Moon and Scorpio Rising find their rhythm. Flow as an operating principle made visible.",r:"Forcing an integration that needs more time. Or staying in one mode to dodge the complexity of holding both.",hook:"Temperance is a visual of your Follower trajectory operating correctly — catching the current, not fighting it."},
+  "The Devil":{u:"Lilith 5th and the instinctual self in full view — not as something to suppress but to understand and integrate. The chains in this card are loose. Awareness releases what unconsciousness maintains.",r:"Neptune 2nd house fog at maximum density — the pleasure-versus-stability tension operating below conscious awareness.",hook:"The Devil always asks: what are you attached to that you're pretending you're not?"},
+  "The Tower":{u:"Uranus doing what Uranus does — dismantling what was built on a foundation that wasn't true. The disruption is a road opener you didn't cast. What falls was always going to fall.",r:"Avoiding necessary disruption by maintaining a structure that has already failed internally.",hook:"The Tower appearing now, at the opening of Uranus in Gemini: the next seven years will include deliberate demolition of false structures. Trust the process."},
+  "The Star":{u:"The signal after the disruption — the field restoring coherence. Neptune 2nd at its highest expression: abundance as frequency, generosity flowing freely toward you.",r:"Hope as another form of deferral. The star is visible but you're waiting for a closer sign before believing it applies to you.",hook:"The Star rules Aquarius — your 4th house cusp. The home and family legacy you're building carries this card's frequency."},
+  "The Moon":{u:"Pluto 12th in full voice — the unconscious material surfacing through dreams, synchronicities, and the field between events. The dream journal is active. Pay attention tonight.",r:"The unconscious material is circulating but distorted. Neptune 2nd fog plus Pluto 12th creating illusions that feel like intuition. Ground before deciding.",hook:"When The Moon appears, the dream work protocol activates. What has the dream journal shown this week?"},
+  "The Sun":{u:"Leo MC at full brightness — the deployment problem resolved, the energy beam released. The Virgo Sun in the 10th doing its actual work: meaningful, visible, precisely executed. Joy as a legitimate state.",r:"The dimmer switch on. Scorpio Rising containing Leo Moon too tightly — brightness present but not fully expressed.",hook:"Your Sun is Virgo in the 10th. This card appearing is direct confirmation: the path is correct and the light you're carrying is real. The question is only one of release."},
+  "Judgement":{u:"The Sleeping Phoenix fully awakened. The call that cannot be unfollowed once heard. North Node activation — the soul's growth direction making itself unmistakably clear.",r:"Self-judgment blocking the awakening. The Chiron wound rendering the inner call as insufficient or untrustworthy.",hook:"What call have you been hearing that you haven't yet fully answered?"},
+  "The World":{u:"Integration complete — this cycle. Not the final destination but the full expression of the current arc. Othala operating: what you've built is real and it belongs to you and those who follow.",r:"Near completion but not quite crossing the threshold — the last resistance before the cycle closes.",hook:"When The World appears in wealth or career context: what you've been working toward is closer to manifestation than your Neptune 2nd house fog is letting you perceive."}
+};
+
+const SUIT_T={
+  Wands:{el:"Fire",core:"Creative will, career momentum, Leo MC energy in motion",block:"Scattered Uranus 2nd — many irons, no forge",flow:"Leo MC expressing through sustained directed action"},
+  Cups:{el:"Water",core:"Emotional intelligence, relational depth, Scorpio Rising perceptual field, North Node 7th partnership",block:"Neptune 2nd idealism bleeding into emotional life — loving what could be more than what is",flow:"Feeling Cognition operating cleanly — body reading the relational field accurately"},
+  Swords:{el:"Air",core:"Mental clarity, communication, Mercury Rx Virgo precision, Chiron Gemini wound and gift of voice",block:"Analysis bridge overriding the sacral response — Mercury editing what Feeling Cognition already knows",flow:"Speaking before it's perfectly refined — the Chiron healing gesture in card form"},
+  Pentacles:{el:"Earth",core:"Material reality, Lot of Fortune Virgo 11th, tangible expression of Jupiter/Uranus/Neptune 2nd potential",block:"Saturn-line conditioning: accumulation requiring excessive effort, security from external structures",flow:"Security relocated to generative capacity — Uranus in Taurus graduation embodied"}
+};
+
+const RANK_T={
+  Ace:"The pure potential of the suit — an opening in the field. Is this the current to enter?",
+  Two:"The choice point. Sacral Authority: which one gets the gut yes?",
+  Three:"Collaboration and early expansion. North Node 7th: growth that requires another person's contribution.",
+  Four:"Consolidation — watch for the optimize-and-stop pattern. Is this rest or the finish line illusion?",
+  Five:"Disruption and friction. Read as road opener energy — what is being cleared is what was blocking the next phase.",
+  Six:"Flow and exchange after difficulty. The field returning to coherence.",
+  Seven:"Strategic assessment. Is this strategic patience or avoidance?",
+  Eight:"Movement after stillness — skill and momentum. The deployment problem resolving into action.",
+  Nine:"Near completion. The Hermit's position — the solitary work is almost done.",
+  Ten:"Completion and culmination. Othala: what are you passing forward?",
+  Page:"New information or new mode. Beginner's mind applied to this suit.",
+  Knight:"Directed movement — powerful but requiring Saturn's aim.",
+  Queen:"Mature receptivity and command. The integrated version — not performing, inhabiting.",
+  King:"Full sovereignty over this domain. Scorpio Rising holding the throne without needing to prove it earned the seat."
+};
+
+const POS_CTX={
+  "The Signal":"The field's single message for this moment. What Feeling Cognition is already registering before the mind names it.",
+  "The Answer":"A direct verdict on your question, with the condition or caution that comes with it.",
+  Past:"What has formed the present moment — the energy or pattern that brought you here.",
+  Present:"The active field right now. What is actually operating beneath the story.",
+  Future:"The trajectory if the current continues. Follower trajectory: you can catch a different current.",
+  Situation:"What is actually happening — not what should be happening.",
+  Action:"What the field is asking you to do or stop doing. Sacral response: yes or no?",
+  Outcome:"The natural result of the action taken.",
+  Mind:"What the mental field is carrying. Mercury Rx Virgo — what analysis is running?",
+  Body:"The somatic state. Stimulant-Touch Determination and Feeling Cognition — what is the instrument reading?",
+  Spirit:"The soul's orientation. What North Node 7th and Leo Moon 9th are pulling toward.",
+  "What Is Hidden":"Pluto 12th material — what is composting below conscious awareness.",
+  "What It Protects":"Every shadow protects something. What vulnerability is the hidden material guarding?",
+  "Root Wound":"The Chiron Gemini 8th layer — what is the original injury beneath the pattern?",
+  "The Gift Within":"Chiron as wounded healer: what gift lives inside the wound once integrated?",
+  "Integration Path":"Understand, love, integrate — not control or eradicate. What does that look like practically?",
+  "Current Wealth Field":"The actual state of the financial field right now — not the story, the field.",
+  "What Blocks Accumulation":"Saturn-line conditioning, Neptune fog, or Uranus scatter — which is most active?",
+  "What Supports Flow":"Jupiter/Uranus/Neptune 2nd potential — what is already moving in the wealth field?",
+  "Field-Required Action":"What the field is asking for, not what the mind thinks should happen next.",
+  "Frequency to Embody":"The energetic state that clears Neptune 2nd interference — quality of being, not doing.",
+  Challenge:"What crosses you — not an enemy, a teacher. What is being refined through this friction?",
+  Foundation:"What is beneath you — what you're standing on whether you know it or not.",
+  "Recent Past":"What is just leaving the field — the energy that is completing.",
+  "Possible Future":"The trajectory ahead if current energy continues.",
+  "Near Future":"What is approaching in the immediate field.",
+  "Self-Perception":"How you are seeing yourself — accurate or filtered through a wound?",
+  Environment:"What is around you — the external field, other people, the context.",
+  "Hopes & Fears":"Often the same card. What you most want and most dread are frequently identical.",
+  "Final Outcome":"The direction the field is pointing — a current, not a fixed destination.",
+  "Hidden Influences":"What is operating on the situation that isn't visible yet.",
+  Obstacles:"What the field has placed between you and movement. Read as teacher, not adversary.",
+  "External Influences":"What is coming from outside — other people, circumstances, the collective field.",
+  "Best Action":"The move that works with the field rather than against it. Follower trajectory.",
+  "Most Likely Outcome":"Where the current is flowing if no major redirection occurs.",
+  "Your Energy":"What you are bringing to this relationship dynamic right now.",
+  "Partner's Energy":"What the other person is carrying. Read with compassion.",
+  "The Dynamic":"The field between you — what the relationship is actually doing.",
+  "What Is Needed":"What the relationship requires to move toward its North Node potential.",
+  "Hidden Thread":"The invisible connection — what is actually binding these two people.",
+  "Growth Edge":"What genuine collaboration here asks you to become.",
+  "New Moon Intention":"What to plant. Be specific — Neptune 2nd vagueness here creates fog in the cycle.",
+  "Waxing — Build":"What actions align with the growing light. Mars energy directed.",
+  "Full Moon — Witness":"What to acknowledge and be grateful for. Leo Moon needs this moment.",
+  "Waning — Release":"What to clear. Road opener energy. What has served its purpose?",
+  "Option A":"The first path — its full field reading.",
+  "Option B":"The second path — what the field is actually offering.",
+  "What You Know":"The information Mercury Rx Virgo has already confirmed.",
+  "What You Don't Know":"What Pluto 12th is still holding. What you're deciding without.",
+  "Field's Preference":"The Follower trajectory signal — which current is the field actually moving in?",
+  "Cost of Not Choosing":"What maintaining the non-decision is actually costing.",
+  "Surface Message":"What the dream appeared to be about at first read.",
+  "Pluto 12th Layer":"The unconscious transformation sequence beneath the dream's surface.",
+  "Chiron Wound Touched":"Which aspect of the voice/intimacy wound was activated in the dream?",
+  "Action Required":"What the dream is asking you to do or stop doing in waking life.",
+  "Integration Gesture":"One concrete physical act that grounds the dream's teaching.",
+  "True Will Direction":"Where your actual will points — underneath the analysis and people-pleasing.",
+  "What Obscures It":"The Neptune fog, Saturn prerequisite, or Chiron editing — what is blurring the signal?",
+  "Scorpio Rising Container":"What the container is currently holding — and what it needs.",
+  "Leo Moon Fuel":"What is emotionally nourishing the direction.",
+  "North Node Pull":"The soul's growth vector pulling toward partnership and voice.",
+  "What the Body Knows":"The Sacral Authority and Feeling Cognition reading — below the analysis.",
+  "Next Step Only":"Not the plan, not the strategy — the single next move the field is asking for.",
+  "Discovered in Solitude":"What the 2nd line Hermit time has produced.",
+  "Ready to Return":"What is complete enough to bring back.",
+  "Who Can Receive It":"The 4th line Opportunist's network — who in your existing circle is positioned to receive?",
+  "Obstacle to Return":"What makes the descent comfortable and the return difficult.",
+  "Gift of the Return":"What the people below receive when the Hermit brings the light back down.",
+  "The Light You Carry":"Your specific lantern — what you carry that others don't have and need.",
+  "Year Theme":"The overarching current for the year.",
+};
+
+function getInterp(name,rev){
+  if(CARDS[name]){const c=CARDS[name];return (rev?c.r:c.u)+"\n\n"+c.hook;}
+  const pts=name.split(" of ");
+  if(pts.length===2){
+    const rank=pts[0],suit=pts[1],st=SUIT_T[suit],rt=RANK_T[rank];
+    if(rev)return `${suit} energy (${st.el} — ${st.core}) meeting resistance at this position. The block pattern active: ${st.block}.\n\n${rt}\n\nReversed here: the ${rank.toLowerCase()} quality of ${suit.toLowerCase()} is present but the interference is running. What would need to clear for this energy to move?`;
+    return `${suit} energy (${st.el}) in its forward expression: ${st.core}. The flow pattern available: ${st.flow}.\n\n${rt}`;
+  }
+  return "The card carries a message appropriate to this position. Sit with it.";
+}
+
+function getYNVerdict(name,rev){
+  if(CARDS[name]){
+    let yn=YN[name];
+    if(!yn)yn={v:"unclear",q:"the field is speaking through this card"};
+    if(rev){
+      if(yn.v==="yes")return{v:"no",q:"the energy is present but blocked — "+yn.q};
+      if(yn.v==="no")return{v:"unclear",q:"the obstacle may be softening — "+yn.q};
+      return{v:"unclear",q:yn.q};
+    }
+    return yn;
+  }
+  const pts=name.split(" of ");
+  if(pts.length===2){
+    const yn=getMinorYN(pts[0],pts[1]);
+    if(rev){
+      if(yn.v==="yes")return{v:"no",q:"the energy is present but blocked — "+yn.q};
+      return{v:"unclear",q:yn.q};
+    }
+    return yn;
+  }
+  return{v:"unclear",q:"the field is speaking through this card"};
+}
+
+function getSynth(cards,spreadId){
+  const suits={Wands:0,Cups:0,Swords:0,Pentacles:0};
+  cards.forEach(c=>{Object.keys(suits).forEach(s=>{if(c.name.includes(s))suits[s]++;});});
+  const maxS=Object.entries(suits).sort((a,b)=>b[1]-a[1])[0];
+  const majorCount=cards.filter(c=>MAJ.includes(c.name)).length;
+  const revCount=cards.filter(c=>c.rev).length;
+  let s="";
+  if(majorCount>=Math.ceil(cards.length*0.4))s+="Multiple Major Arcana signal structural patterns and soul-level movements, not just situational conditions. ";
+  if(revCount>=Math.ceil(cards.length*0.5))s+="The density of reversed cards points to interference running across several domains simultaneously — Neptune 2nd fog or the Saturn effort-prerequisite may be the common thread. ";
+  if(maxS[1]>=2){
+    const msgs={Wands:"Fire dominance: creative and directional will is activated. Leo MC and Mars/Saturn 1st are prominent. The question is direction, not power.",Cups:"Water dominance: the relational and emotional field is the primary terrain. North Node 7th work and Scorpio Rising perceptual depth are most active.",Swords:"Air dominance: the mental field is carrying significant weight. Watch for the analysis bridge substituting for the sacral response.",Pentacles:"Earth dominance: the material and practical field is foregrounded. The wealth work and tangible legacy — Othala is active."};
+    s+=msgs[maxS[0]]+" ";
+  }
+  if(spreadId==="wealth")s+="\n\nTrack this at the field level over the next lunar cycle. Not 'did money appear' but 'what friction disappeared in the financial field.'";
+  if(spreadId==="shadow")s+="\n\nShadow integration protocol: understand, love, integrate — not control or eradicate. What has surfaced is not a problem to solve but a part to welcome back.";
+  if(spreadId==="dream")s+="\n\nPluto 12th processes symbolically. The literal content is rarely the message. What feeling remained when you woke? That is the signal.";
+  if(spreadId==="rel")s+="\n\nNorth Node 7th reminder: genuine collaboration means both people's full truth in the room. This reading is your field — not a verdict on the other person.";
+  return s.trim()||"The field has spoken. Sit with the reading for 24 hours before deciding what it means. The deepest insight often arrives the next morning.";
+}
+
+let sel=null,lastReadingText="",lastCards=[];
+
+function initGrid(){
+  const g=document.getElementById('sgrid');
+  SPREADS.forEach(s=>{
+    const b=document.createElement('button');
+    b.className='sbtn';b.dataset.id=s.id;
+    b.innerHTML=`<span class="sg">${s.g}</span><span class="sn">${s.name}</span><span class="sc">${s.cards} card${s.cards>1?'s':''}</span>`;
+    b.onclick=()=>pick(s.id);
+    g.appendChild(b);
+  });
+}
+
+function pick(id){
+  sel=SPREADS.find(s=>s.id===id);
+  document.querySelectorAll('.sbtn').forEach(b=>b.classList.toggle('active',b.dataset.id===id));
+  const d=document.getElementById('sdesc');d.textContent=sel.desc;d.style.display='block';
+  document.getElementById('dbtn').disabled=false;
+  document.getElementById('cards').innerHTML='';
+  document.getElementById('verdict-area').innerHTML='';
+  document.getElementById('rbox').classList.remove('show');
+  lastReadingText='';lastCards=[];
+}
+
+function deal(n){
+  const pool=[...DECK],out=[];
+  for(let i=0;i<n;i++){const idx=Math.floor(Math.random()*pool.length);out.push({name:pool.splice(idx,1)[0],rev:Math.random()<0.28});}
+  return out;
+}
+
+function draw(){
+  if(!sel)return;
+  const drawn=deal(sel.cards);
+  lastCards=drawn;
+  const q=document.getElementById('q').value.trim();
+
+  // Render chips
+  const row=document.getElementById('cards');row.innerHTML='';
+  drawn.forEach((c,i)=>{
+    const chip=document.createElement('div');
+    chip.className=`chip${c.rev?' rev':''}`;
+    chip.innerHTML=`<span class="pl">${sel.pos[i]}</span>${c.name}${c.rev?' ®':''}`;
+    row.appendChild(chip);
+  });
+
+  // YES/NO verdict display
+  const va=document.getElementById('verdict-area');va.innerHTML='';
+  if(sel.yesno){
+    const yn=getYNVerdict(drawn[0].name,drawn[0].rev);
+    const labels={yes:"YES",no:"NO",unclear:"UNCLEAR"};
+    va.innerHTML=`<div class="verdict"><div class="verdict-word ${yn.v}">${labels[yn.v]}</div><div class="verdict-sub">${yn.q}</div></div>`;
+  }
+
+  // Build reading HTML
+  let html='';
+  if(q)html+=`<div class="csec"><em style="color:#8a96a8;font-size:0.8rem">Holding: "${q}"</em></div>`;
+
+  drawn.forEach((c,i)=>{
+    const pos=sel.pos[i];
+    const ctx=POS_CTX[pos]||'';
+    const interp=getInterp(c.name,c.rev);
+    const ifmt=interp.split('\n\n').map(p=>`<p>${p}</p>`).join('');
+    html+=`<div class="csec"><div class="ch4">${pos}: ${c.name}${c.rev?'<span class="rev-tag">REVERSED</span>':''}</div>${ctx?`<p style="font-size:0.88rem;color:#7a6530;font-style:italic;margin-bottom:0.7rem">${ctx}</p>`:''}${ifmt}</div>`;
+  });
+
+  const synth=getSynth(drawn,sel.id);
+  html+=`<div class="synth"><strong>✦ The Through-Line</strong><br><br>${synth}</div>`;
+
+  document.getElementById('rtxt').innerHTML=html;
+  document.getElementById('rbox').classList.add('show');
+
+  // Build plain text for copying
+  let txt=`PRACTIKA TAROT READING\n${'─'.repeat(40)}\n`;
+  txt+=`SPREAD: ${sel.name}\n`;
+  if(q)txt+=`QUESTION: ${q}\n`;
+  txt+=`\nCARDS DRAWN:\n`;
+  drawn.forEach((c,i)=>txt+=`  ${sel.pos[i]}: ${c.name}${c.rev?' (Reversed)':''}\n`);
+  if(sel.yesno){
+    const yn=getYNVerdict(drawn[0].name,drawn[0].rev);
+    txt+=`\nVERDICT: ${yn.v.toUpperCase()} — ${yn.q}\n`;
+  }
+  txt+=`\nREADING:\n${'─'.repeat(40)}\n`;
+  drawn.forEach((c,i)=>{
+    txt+=`\n${sel.pos[i].toUpperCase()}: ${c.name}${c.rev?' (Reversed)':''}\n`;
+    const ctx=POS_CTX[sel.pos[i]]||'';
+    if(ctx)txt+=`[${ctx}]\n`;
+    txt+=getInterp(c.name,c.rev)+'\n';
+  });
+  txt+=`\nTHROUGH-LINE:\n${getSynth(drawn,sel.id)}\n`;
+  txt+=`\n${'─'.repeat(40)}\nPractika 2.0 · Tier 3 output — verify what matters`;
+  lastReadingText=txt;
+
+  setTimeout(()=>document.getElementById('rbox').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+function copyReading(){
+  if(!lastReadingText)return;
+  navigator.clipboard.writeText(lastReadingText).then(()=>{
+    const btn=document.getElementById('cpybtn');
+    btn.textContent='✓ Copied';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='⊕  Copy for Practika Chat';btn.classList.remove('copied');},2500);
+  }).catch(()=>{
+    // Fallback
+    const ta=document.createElement('textarea');
+    ta.value=lastReadingText;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();document.execCommand('copy');
+    document.body.removeChild(ta);
+    const btn=document.getElementById('cpybtn');
+    btn.textContent='✓ Copied';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='⊕  Copy for Practika Chat';btn.classList.remove('copied');},2500);
+  });
+}
+
+initGrid();
+</script>
+</body>
+</html>
