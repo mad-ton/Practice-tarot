@@ -33,6 +33,11 @@ h1{font-family:'Cinzel',serif;font-size:clamp(1.1rem,4.5vw,1.8rem);letter-spacin
 .sbtn{background:#16162a;border:1px solid rgba(201,168,76,0.15);color:#cfc4b2;padding:0.7rem 0.8rem;cursor:pointer;text-align:left;transition:all 0.2s;font-family:inherit;width:100%}
 .sbtn:hover{border-color:rgba(201,168,76,0.4);color:#c9a84c}
 .sbtn.active{border-color:#c9a84c;background:rgba(201,168,76,0.07);color:#c9a84c}
+.sbtn.precision-btn{border-color:rgba(200,98,42,0.25);background:#1a0f0a}
+.sbtn.precision-btn:hover{border-color:rgba(200,98,42,0.6);color:#c8622a}
+.sbtn.precision-btn.active{border-color:#c8622a;background:rgba(200,98,42,0.1);color:#c8622a}
+.sbtn.precision-btn .sg{color:#7a3020}
+.precision-label{font-size:0.5rem;letter-spacing:0.15em;color:#c8622a;opacity:0.7;display:block;margin-bottom:0.15rem;text-transform:uppercase}
 .sg{font-size:0.9rem;display:block;color:#7a6530;margin-bottom:0.2rem}
 .sn{font-size:0.82rem;display:block;font-weight:600;margin-bottom:0.1rem}
 .sc{font-size:0.62rem;color:#7a6530;opacity:0.8}
@@ -151,6 +156,9 @@ const SP=[
   {id:"will",name:"True Will Compass",cards:7,g:"⊕",desc:"True will direction · What obscures · Primary container · Core fuel · Soul pull · What the body knows · Next step only.",pos:["True Will Direction","What Obscures It","Primary Container","Core Fuel","Soul Pull","What the Body Knows","Next Step Only"]},
   {id:"hermit",name:"The Hermit's Return",cards:6,g:"⟁",desc:"Discovered in solitude · Ready to return · Who can receive · Obstacle · Gift · The light carried.",pos:["Discovered in Solitude","Ready to Return","Who Can Receive It","Obstacle to Return","Gift of the Return","The Light You Carry"]},
   {id:"year",name:"Year Ahead",cards:13,g:"⊞",desc:"Year theme + one card per month.",pos:["Year Theme","January","February","March","April","May","June","July","August","September","October","November","December"]},
+  {id:"daily_rx",name:"Daily Prescription",cards:3,g:"⚕",desc:"PRECISION SPREAD. The exact thing to do today · The exact thing to stop today · The one signal that confirms you did it. Bring a specific situation or leave blank.",pos:["Do This Today","Stop This Today","The Confirmation Signal"],precision:true},
+  {id:"decision_rx",name:"Decision Prescription",cards:5,g:"⚖",desc:"PRECISION SPREAD. The exact action · The timing condition · What will resist · What confirms you are on track · Cost of continued delay. Use at a specific fork.",pos:["The Exact Action","The Timing Condition","What Will Resist","On-Track Confirmation","Cost of Delay"],precision:true},
+  {id:"pisces_rx",name:"Pisces Prescription",cards:4,g:"♓",desc:"PRECISION SPREAD. The prescription · Why the direct path feels wrong · The Pisces 5th version that gets the same result enjoyably · The field condition that confirms this flavor is correct.",pos:["The Prescription","Why Direct Feels Wrong","The Pisces 5th Version","Field Confirmation"],precision:true},
 ];
 
 // ── DECK ──
@@ -406,6 +414,18 @@ const POS_CTX_DEFAULT={
   "Gift of the Return":"What others receive when the light comes back.",
   "The Light You Carry":"What you carry that others don't have and need.",
   "Year Theme":"The overarching current for the year.",
+  "Do This Today":"PRECISION: One concrete specific action for today. Not a direction — an action. Something that can be done and confirmed complete.",
+  "Stop This Today":"PRECISION: One concrete behavior or pattern to halt today. Specific enough to recognize in the moment it arises.",
+  "The Confirmation Signal":"PRECISION: The one observable sign that confirms the prescription was followed. Not a feeling — a condition.",
+  "The Exact Action":"PRECISION: The specific move stated plainly. No metaphor. If you had to tell someone else what to do, what would you say?",
+  "The Timing Condition":"PRECISION: Not a date — a field condition. When THIS is present, move. The signal that opens the window.",
+  "What Will Resist":"PRECISION: The specific internal pattern or external force that will push back. Name it so it can be recognized when it arrives.",
+  "On-Track Confirmation":"PRECISION: The one observable indicator that the action is working. What would you see or feel if you were on the correct path?",
+  "Cost of Delay":"PRECISION: What is concretely lost or compounded for each cycle of non-action. What actually accumulates?",
+  "The Prescription":"PRECISION: The exact thing that needs to happen. Stated as a directive not a direction.",
+  "Why Direct Feels Wrong":"PRECISION: The specific resistance pattern — which wound or conditioning makes the straightforward path feel unacceptable.",
+  "The Pisces 5th Version":"PRECISION: The same prescription delivered through pleasure creativity and play. Same result different flavor. What does this look like if it is enjoyable?",
+  "Field Confirmation":"PRECISION: The sign that the Pisces 5th version is correct for this moment — not an excuse to avoid but genuine alignment between path and nature.",
 };
 
 function getInterp(name,rev){
@@ -458,7 +478,8 @@ function initGrid(){
   SP.forEach(s=>{
     const b=document.createElement('button');
     b.className='sbtn';b.dataset.id=s.id;
-    b.innerHTML=`<span class="sg">${s.g}</span><span class="sn">${s.name}</span><span class="sc">${s.cards} card${s.cards>1?'s':''}</span>`;
+    b.innerHTML=`${s.precision?'<span class="precision-label">Precision</span>':''}<span class="sg">${s.g}</span><span class="sn">${s.name}</span><span class="sc">${s.cards} card${s.cards>1?'s':''}</span>`;
+if(s.precision)b.classList.add('precision-btn');
     b.onclick=()=>pick(s.id);
     g.appendChild(b);
   });
